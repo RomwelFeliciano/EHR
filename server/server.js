@@ -1,22 +1,24 @@
+// dotenv for process.env function
 const dotenv = require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const userRoute = require('./routes/userRoute');
 
+// Mongoose for connection of mongoDB
+const mongoose = require('mongoose');
+
+// Initialize Express
+const express = require('express');
 const app = express();
 
 // Middleware
+const cors = require('cors');
 app.use(cors());
+
+// Accept Data from JSON or POSTMAN
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/api/user', userRoute);
 
 // Routes
-app.get('/', (req, res) => {
-	// Check to test GET
-	req.send('Home Page');
-});
+const userRoute = require('./routes/userRoute');
+app.use('/api/user', userRoute);
 
 // Creating a dynamic PORT
 const PORT = process.env.PORT || 5000;
@@ -24,14 +26,16 @@ const PORT = process.env.PORT || 5000;
 // Connect to Database then Listen and check if error
 mongoose
 	.connect(process.env.MONGO_URI, {
-		// Change 'your_database_name' to your desired database name
+		// Database name in Atlas MongoDB
 		dbName: 'EHR',
 	})
 	.then(() => {
+		// To Check if the connection is successful
 		app.listen(PORT, () => {
 			console.log(`Listening on Port ${PORT}...`);
 		});
 	})
 	.catch((error) => {
-		console.error('Error connecting to MongoDB:', error);
+		// Check if there is no connection
+		console.error('MongoDB Error Connection:', error);
 	});
