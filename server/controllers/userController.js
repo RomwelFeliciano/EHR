@@ -19,10 +19,16 @@ const registerUser = async (req, res) => {
 		req.body;
 
 	// extracting the filename of the file and stores in a constant variable
-	const profilePicture = req.file.filename;
+	const profilePicture = req.file;
 
 	try {
-		// Create a new user document with the profilePicture data
+		// Check if no file uploaded
+		if (!profilePicture) {
+			// Return a json error message
+			return res.status(500).json({ error: 'No file uploaded.' });
+		}
+
+		// Proceed here if no error
 		const user = await Users.register(
 			firstname,
 			lastname,
@@ -30,18 +36,16 @@ const registerUser = async (req, res) => {
 			contactNumber,
 			email,
 			password,
-			profilePicture
+			profilePicture.filename // .filename since we only want to store the filename
 		);
-
-		console.log(user);
-
+		// Uploaded Successfully
 		res.status(200).json({ user });
 	} catch (error) {
 		// Registration failed, delete the uploaded file if it exists
-		if (req.file) {
-			// If there's an uploaded file, delete it
-			fs.unlinkSync(req.file.path);
+		if (profilePicture) {
+			fs.unlinkSync(profilePicture.path);
 		}
+
 		res.status(500).json({ msg: error.message });
 	}
 };
