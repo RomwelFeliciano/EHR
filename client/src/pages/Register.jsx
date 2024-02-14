@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { FaCamera } from "react-icons/fa";
-import axios from "axios"; // Import axios for making HTTP requests
+import axios from "axios"; // Import axios for making HTTP requests.
+import { useRegister } from "../hooks/useRegister";
 
 const Register = () => {
+  const { register, error } = useRegister();
+
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -28,42 +31,57 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Create a FormData object to send the file along with other form data
-    const data = new FormData();
-    data.append("firstname", formData.firstname);
-    data.append("lastname", formData.lastname);
-    data.append("position", formData.position);
-    data.append("contactNumber", formData.contactNumber);
-    data.append("email", formData.email);
-    data.append("password", formData.password);
-    data.append("profilePicture", formData.profilePicture);
+    // const data = new FormData();
+    // data.append("firstname", formData.firstname);
+    // data.append("lastname", formData.lastname);
+    // data.append("position", formData.position);
+    // data.append("contactNumber", formData.contactNumber);
+    // data.append("email", formData.email);
+    // data.append("password", formData.password);
+    // data.append("profilePicture", formData.profilePicture);
 
     try {
-      // Make a POST request to your backend endpoint
-      const response = await axios.post(
-        "http://localhost:5000/api/user/register",
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
+      await register(
+        formData.firstname,
+        formData.lastname,
+        formData.position,
+        formData.contactNumber,
+        formData.email,
+        formData.password,
+        formData.profilePicture,
       );
 
-      console.log("User registered:", response.data);
-      // Reset form data after successful registration
-      setFormData({
-        firstname: "",
-        lastname: "",
-        position: "",
-        contactNumber: "",
-        email: "",
-        password: "",
-        profilePicture: "",
-      });
+      console.log("User Created Successfully!");
     } catch (error) {
-      console.error("Error registering user:", error.response.data);
+      console.log("NETWORK ERROR:", error);
     }
+
+    // try {
+    //   // Make a POST request to your backend endpoint
+    //   const response = await axios.post(
+    //     "http://localhost:5000/api/user/register",
+    //     data,
+    //     {
+    //       headers: {
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     },
+    //   );
+
+    //   console.log("User registered:", response.data);
+    //   // Reset form data after successful registration
+    //   setFormData({
+    //     firstname: "",
+    //     lastname: "",
+    //     position: "",
+    //     contactNumber: "",
+    //     email: "",
+    //     password: "",
+    //     profilePicture: "",
+    //   });
+    // } catch (error) {
+    //   console.error("Error registering user:", error.response.data);
+    // }
   };
 
   return (
@@ -148,6 +166,7 @@ const Register = () => {
             <input
               type="email"
               className="h-9 rounded px-2 py-1 focus:outline-none"
+              autoComplete="username"
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -159,6 +178,7 @@ const Register = () => {
               type="password"
               className="h-9 rounded px-2 py-1 focus:outline-none"
               name="password"
+              autoComplete="current-password"
               value={formData.password}
               onChange={handleChange}
             />
@@ -167,7 +187,7 @@ const Register = () => {
             className="col-span-full mt-2 h-9 w-full rounded bg-second font-medium transition-all duration-300 ease-in-out hover:bg-neutral-300"
             type="submit"
           >
-            Register
+            Register {error}
           </button>
         </div>
       </form>
