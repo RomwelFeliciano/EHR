@@ -10,7 +10,11 @@ const app = express();
 
 // Middleware
 const cors = require('cors');
-app.use(cors());
+app.use(
+	cors({
+		origin: 'http://localhost:5173',
+	})
+);
 
 // Accept Data from JSON or POSTMAN
 app.use(express.json());
