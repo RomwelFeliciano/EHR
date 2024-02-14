@@ -67,13 +67,13 @@ userSchema.statics.register = async function (
 ) {
 	// Validation when empty filled
 	if (
+		// This works only for text and number inputs
 		!firstname ||
 		!lastname ||
 		!position ||
 		!contactNumber ||
 		!email ||
-		!password ||
-		!profilePicture
+		!password
 	) {
 		throw new Error('All fields must be filled');
 	}
