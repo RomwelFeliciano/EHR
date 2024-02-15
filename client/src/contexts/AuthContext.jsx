@@ -25,12 +25,12 @@ export const AuthContextProvider = ({ children }) => {
   });
 
   //   UseEffect for retrieving the user data from the localStorage
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("user"));
-  //   if (user) {
-  //     dispatch({ type: "LOGIN", payload: user });
-  //   }
-  // }, []);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      dispatch({ type: "LOGIN", payload: user });
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>
