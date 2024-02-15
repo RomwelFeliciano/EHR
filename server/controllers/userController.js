@@ -24,7 +24,7 @@ const registerUser = async (req, res) => {
 	try {
 		// Check if no file uploaded
 		if (!profilePicture) {
-			// Return a json error message
+			// Return a json error message - return is needed so it wont crashed the server
 			return res.status(500).json({ error: 'No file uploaded.' });
 		}
 
@@ -38,14 +38,39 @@ const registerUser = async (req, res) => {
 			password,
 			profilePicture.filename // .filename since we only want to store the filename
 		);
+
+		const token = createToken(user._id);
+
 		// Uploaded Successfully
-		res.status(200).json({ user });
+		res.status(200).json({ firstname, lastname, profilePicture, token });
 	} catch (error) {
 		// Registration failed, delete the uploaded file if it exists
 		if (profilePicture) {
 			fs.unlinkSync(profilePicture.path);
 		}
 
+		res.status(500).json({ msg: error.message });
+	}
+};
+
+// Login User
+const loginUser = async (req, res) => {
+	const { email, password } = req.body;
+	try {
+		const user = await Users.login(email, password);
+
+		const { firstname, lastname } = user;
+
+		// Create a token
+		const token = createToken(user._id);
+
+		res.status(200).json({
+			firstname,
+			lastname,
+			email,
+			token,
+		});
+	} catch (error) {
 		res.status(500).json({ msg: error.message });
 	}
 };
@@ -60,4 +85,4 @@ const getUsers = async (req, res) => {
 	}
 };
 
-module.exports = { registerUser, getUsers };
+module.exports = { registerUser, loginUser, getUsers };

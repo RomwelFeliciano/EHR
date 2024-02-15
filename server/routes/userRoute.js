@@ -5,13 +5,20 @@ const express = require('express');
 const upload = require('../multerConfig');
 
 // import the functions from the controllers
-const { registerUser, getUsers } = require('../controllers/userController');
+const {
+	registerUser,
+	loginUser,
+	getUsers,
+} = require('../controllers/userController');
 
 // Use the router express
 const router = express.Router();
 
 // Register a user
 router.post('/register', upload.single('profilePicture'), registerUser);
+
+// Login a user
+router.post('/login', loginUser);
 
 // Get all the users
 router.get('/', getUsers);

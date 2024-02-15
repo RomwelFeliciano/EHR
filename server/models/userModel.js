@@ -111,6 +111,31 @@ userSchema.statics.register = async function (
 	return user;
 };
 
+// Static Login Method
+userSchema.statics.login = async function (email, password) {
+	//Validation
+	if (!email || !password) {
+		throw Error('All fields must be filled');
+	}
+	if (!validator.isEmail(email)) {
+		throw Error('Email is not valid');
+	}
+
+	const user = await this.findOne({ email });
+
+	if (!user) {
+		throw Error('Incorrect Email');
+	}
+
+	const match = await bcrypt.compare(password, user.password);
+
+	if (!match) {
+		throw Error('Incorrect Password');
+	}
+
+	return user;
+};
+
 // create a Variable of Schema Model to use for the entire application
 const Users = mongoose.model('User', userSchema);
 
