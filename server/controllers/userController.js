@@ -59,6 +59,7 @@ const loginUser = async (req, res) => {
 	try {
 		const user = await Users.login(email, password);
 
+		// Destructure the user since inside of it is user
 		const { firstname, lastname } = user;
 
 		// Create a token

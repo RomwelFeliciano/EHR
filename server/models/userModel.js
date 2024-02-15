@@ -121,12 +121,14 @@ userSchema.statics.login = async function (email, password) {
 		throw Error('Email is not valid');
 	}
 
+	// find the user with the same email in the database
 	const user = await this.findOne({ email });
 
 	if (!user) {
 		throw Error('Incorrect Email');
 	}
 
+	// Compare the password of the user password in the database
 	const match = await bcrypt.compare(password, user.password);
 
 	if (!match) {
