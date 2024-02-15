@@ -4,7 +4,7 @@ import axios from "axios"; // Import axios for making HTTP requests.
 import { useRegister } from "../hooks/useRegister";
 
 const Register = () => {
-  const { register, error } = useRegister();
+  const { register, error, isLoading, setIsLoading } = useRegister();
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -55,6 +55,10 @@ const Register = () => {
     } catch (error) {
       console.log("NETWORK ERROR:", error);
     }
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
 
     // try {
     //   // Make a POST request to your backend endpoint
@@ -186,6 +190,7 @@ const Register = () => {
           <button
             className="col-span-full mt-2 h-9 w-full rounded bg-second font-medium transition-all duration-300 ease-in-out hover:bg-neutral-300"
             type="submit"
+            disabled={isLoading}
           >
             Register {error}
           </button>

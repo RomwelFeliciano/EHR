@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { useAuthContext } from "./useAuthContext";
 
 // To use the URL Localhost of backend
@@ -8,6 +8,7 @@ import { useAuthContext } from "./useAuthContext";
 // useRegister for Registration Hook
 export const useRegister = () => {
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useAuthContext();
 
   // Handle Register user data
@@ -22,8 +23,6 @@ export const useRegister = () => {
   ) => {
     // Set the error to null
     setError(null);
-
-    console.log(profilePicture);
 
     try {
       // use this kind of data processing when using fetch method
@@ -40,8 +39,10 @@ export const useRegister = () => {
         method: "POST",
         body: data,
       });
+
       const json = await response.json();
 
+      setIsLoading(true);
       //   Use this one when using axios
       //   const response = await axios.post(
       //     "http://localhost:5000/api/user/register",
@@ -62,33 +63,29 @@ export const useRegister = () => {
       //   );
 
       //   const json = response.data;
-      console.log(response);
-      console.log(json);
 
-      if (!profilePicture) {
-        setError("Please select a Profile Picture");
-      }
+      // For Checking
+      // console.log(response);
+      // console.log(json);
 
       if (!response.ok) {
-        setError(json.msg, "WASAGI");
+        setError(json.msg);
       }
       if (response.ok) {
         // Save the user to local storage
         // localStorage.setItem("user", JSON.stringify(json));
 
         // Update the auth context
-        // dispatch({ type: "LOGIN", payload: json });
-        console.log(json, "IT WAS OKAY");
+        dispatch({ type: "LOGIN", payload: json });
       }
     } catch (error) {
-      console.log(error.message, "HEYHEY ERROR");
-
       setError(error.message);
     }
 
+    // Down here because the setError will set back to null from the top
     if (!profilePicture) {
-      setError("Please upload a file");
+      setError("Please Select a Profile Picture");
     }
   };
-  return { register, error };
+  return { register, error, isLoading, setIsLoading };
 };
