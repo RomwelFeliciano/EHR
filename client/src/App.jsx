@@ -1,4 +1,5 @@
 import { BrowserRouter as Router } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 import AppRoutes from "./AppRoutes";
 import Navbar from "./components/Navbar";
 import { useState } from "react";

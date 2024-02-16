@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaCamera } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
 import axios from "axios"; // Import axios for making HTTP requests.
 import { useRegister } from "../hooks/useRegister";
 
@@ -90,6 +91,7 @@ const Register = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
+      <ToastContainer position="top-center" autoClose={3000} />
       <form
         className="w-[800px] rounded-lg bg-main p-4 shadow-2xl"
         encType="multipart/form-data"

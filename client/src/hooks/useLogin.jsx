@@ -1,15 +1,13 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { useAuthContext } from "./useAuthContext";
 
 // export const URL = process.env.REACT_APP_SERVER_URL;
 
 export const useLogin = () => {
-  const [error, setError] = useState(null);
   const { dispatch } = useAuthContext();
 
   const login = async (email, password) => {
-    setError(null);
-
     const response = await fetch("http://localhost:5000/api/user/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -19,7 +17,7 @@ export const useLogin = () => {
     const json = await response.json();
 
     if (!response.ok) {
-      setError(json.msg);
+      toast.error(json.msg);
     }
     if (response.ok) {
       // Save the user to local storage
@@ -30,5 +28,5 @@ export const useLogin = () => {
     }
   };
 
-  return { login, error };
+  return { login };
 };

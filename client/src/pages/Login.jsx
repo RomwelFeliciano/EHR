@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
 import { useLogin } from "../hooks/useLogin";
 
 const Login = () => {
@@ -6,7 +7,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const { login, error } = useLogin();
+  const { login } = useLogin();
 
   const handleChange = (e) => {
     setIsLoginForm({ ...loginForm, [e.target.name]: e.target.value });
@@ -20,6 +21,7 @@ const Login = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
+      <ToastContainer position="top-center" autoClose={3000} />
       <form
         className="w-[500px] rounded-lg bg-main p-4 shadow-2xl"
         onSubmit={handleSubmit}
@@ -50,7 +52,7 @@ const Login = () => {
           </div>
 
           <button className="col-span-full mt-2 h-9 w-full rounded bg-second font-medium transition-all duration-300 ease-in-out hover:bg-neutral-300">
-            Login {error}
+            Login
           </button>
         </div>
       </form>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 // import axios from "axios";
 import { useAuthContext } from "./useAuthContext";
 
@@ -7,7 +8,6 @@ import { useAuthContext } from "./useAuthContext";
 
 // useRegister for Registration Hook
 export const useRegister = () => {
-  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useAuthContext();
 
@@ -22,7 +22,6 @@ export const useRegister = () => {
     profilePicture,
   ) => {
     // Set the error to null
-    setError(null);
 
     try {
       // use this kind of data processing when using fetch method
@@ -69,7 +68,7 @@ export const useRegister = () => {
       // console.log(json);
 
       if (!response.ok) {
-        setError(json.msg);
+        toast.error(json.msg);
       }
       if (response.ok) {
         // Save the user to local storage
@@ -79,13 +78,13 @@ export const useRegister = () => {
         dispatch({ type: "LOGIN", payload: json });
       }
     } catch (error) {
-      setError(error.message);
+      toast.error(error.message);
     }
 
     // Down here because the setError will set back to null from the top
     if (!profilePicture) {
-      setError("Please Select a Profile Picture");
+      toast.error("Please Select a Profile Picture");
     }
   };
-  return { register, error, isLoading, setIsLoading };
+  return { register, isLoading, setIsLoading };
 };
