@@ -80,7 +80,9 @@ userSchema.statics.register = async function (
 
 	// Validation of password must 8 characters, uppercase, numbers, and special characters
 	if (!validator.isStrongPassword(password)) {
-		throw new Error('Password is weak');
+		throw new Error(
+			'Password must contain Lowercase, Uppercase, Numbers and Special Characters'
+		);
 	}
 
 	// Check if the email is existing
