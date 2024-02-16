@@ -12,16 +12,15 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-0 flex h-24 w-full items-center justify-between bg-main px-32 shadow-lg">
-      <h1 className="text-3xl font-bold text-second">EHR</h1>
-      <nav className="flex w-full items-center justify-end gap-4 text-lg font-medium">
+      <h1 className="w-full text-3xl font-bold text-second">EHR</h1>
+      <nav
+        className={`flex w-full items-center gap-4 text-lg font-medium ${user ? "justify-center" : "justify-end"}`}
+      >
         <Link to="/" className="hover:text-second">
           Home
         </Link>
         {user && (
           <>
-            <h1>
-              Hello, {user.firstname} {user.lastname}
-            </h1>
             <Link to="/patients" className="hover:text-second">
               Patients
             </Link>
@@ -49,8 +48,13 @@ const Navbar = () => {
             </Link>
           </>
         )}
+      </nav>
 
-        {user && (
+      {user && (
+        <div className="flex w-full items-center justify-end gap-4">
+          <h1 className="text-lg font-bold">
+            Hello, {user.firstname} {user.lastname}
+          </h1>
           <Link
             to="/"
             className="rounded-lg border-2 border-second px-2 py-1 text-second transition-all duration-300 ease-in-out hover:border-black hover:bg-third hover:text-white"
@@ -58,8 +62,8 @@ const Navbar = () => {
           >
             Logout
           </Link>
-        )}
-      </nav>
+        </div>
+      )}
     </header>
   );
 };
