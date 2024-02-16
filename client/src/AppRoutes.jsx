@@ -8,7 +8,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Patients from "./pages/Patients";
 
-const AppRoutes = ({ handleLogin }) => {
+const AppRoutes = () => {
   const { user } = useAuthContext();
 
   return (
