@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 // Initialize Express
 const express = require('express');
+const path = require('path'); // Import path module
 const app = express();
 
 // Middleware
@@ -23,6 +24,17 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 const userRoute = require('./routes/userRoute');
 app.use('/api/user', userRoute);
+
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+	// Set static folder
+	app.use(express.static('client/build'));
+
+	// Serve index.html for any other routes not specifically handled
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+	});
+}
 
 // Creating a dynamic PORT
 const PORT = process.env.PORT || 5000;
