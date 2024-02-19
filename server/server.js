@@ -24,6 +24,8 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 const userRoute = require('./routes/userRoute');
 app.use('/api/user', userRoute);
+const patientRoute = require('./routes/patientRoute');
+app.use('/api/patients', patientRoute);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
