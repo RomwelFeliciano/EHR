@@ -54,6 +54,11 @@ const patientSchema = mongoose.Schema(
 			required: true,
 			trim: true,
 		},
+		addedBy: {
+			type: String,
+			required: true,
+			trim: true,
+		},
 	},
 	{ timestamps: true } // Timestamps to have a property of createdAt and updatedAt
 );
