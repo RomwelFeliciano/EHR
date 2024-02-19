@@ -11,7 +11,7 @@ const path = require('path');
 const storage = multer.diskStorage({
 	// Where will be the files stored
 	destination: function (req, file, cb) {
-		cb(null, './server/uploads/');
+		cb(null, './server/uploads/profile-picture');
 	},
 	// Generate a new filename
 	filename: function (req, file, cb) {

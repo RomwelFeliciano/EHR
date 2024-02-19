@@ -2,7 +2,7 @@
 const express = require('express');
 
 // Import upload from the multer to use it
-const upload = require('../multerConfig');
+const upload = require('../middleware/multerUserRegistration');
 
 // import the functions from the controllers
 const {
