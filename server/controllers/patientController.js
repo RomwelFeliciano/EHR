@@ -1,9 +1,15 @@
+const fs = require('fs');
+
 // Import the users schema
 const Patients = require('../models/patientModel');
 
 // Create a Note
 const addPatient = async (req, res) => {
 	const user_id = req.user._id;
+	const { firstname, lastname } = req.user;
+	console.log(user_id, firstname, lastname);
+
+	const addedBy = `${firstname} ${lastname}`;
 
 	const {
 		fullname,
@@ -38,11 +44,17 @@ const addPatient = async (req, res) => {
 				diagnosis,
 				patientPicture: patientPicture.filename,
 				user_id,
+				addedBy,
 			} // .filename since we only want to store the filename
 		);
 
 		res.status(200).json(patient);
 	} catch (error) {
+		// Registration failed, delete the uploaded file if it exists
+		if (patientPicture) {
+			fs.unlinkSync(patientPicture.path);
+		}
+
 		res.status(500).json({ msg: error.message });
 	}
 };
