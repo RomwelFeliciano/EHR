@@ -1,137 +1,66 @@
-import React from "react";
+import { useState, useEffect, useRef, useContext } from "react";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { loadingContext } from "../contexts/LoadingContext";
+import Loading from "../components/Loading";
+import Table from "../components/Table";
+import axios from "axios";
 
 const Patients = () => {
+  const { isLoading, setIsLoading } = useContext(loadingContext);
+  // const [isLoading, setIsLoading] = useState(true);
+
+  const [patients, setPatients] = useState([]);
+
+  const { user } = useAuthContext();
+
+  // Handle Get All Data
+  const getPatients = async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await axios.get("http://localhost:5000/api/patients", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      setPatients(data);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 800);
+    } catch (error) {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 800);
+      console.log(error);
+    }
+  };
+
+  // Re-render when there are notes
+  const getPatientsRef = useRef(getPatients);
+
+  useEffect(() => {
+    if (user) {
+      getPatientsRef.current();
+    }
+  }, [user, getPatientsRef]);
+
   return (
-    <div className="flex min-h-screen items-start justify-center pt-44">
-      <table class="w-full rounded-lg text-left text-sm font-medium text-gray-800 rtl:text-right">
-        <thead class="text-se bg-main text-xs uppercase text-second">
-          <tr>
-            <th scope="col" class="px-6 py-3">
-              Patient's Name
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Birthday
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Hospital Registration #
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Religion
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Address
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Date of Admission
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Chief Complaint
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Admitting Diagnosis
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="border-b transition-all duration-200 ease-in-out odd:bg-white even:bg-pink-100 hover:bg-pink-300">
-            <td
-              scope="row"
-              class="whitespace-nowrap px-6 py-4 font-semibold text-black"
-            >
-              Juan Dela Cruz
-            </td>
-
-            <td class="px-6 py-4">February 29, 2024</td>
-            <td class="px-6 py-4">216</td>
-            <td class="px-6 py-4">Catholic</td>
-            <td class="px-6 py-4">Clark Pampanga</td>
-            <td class="px-6 py-4">March 01, 2024</td>
-            <td class="px-6 py-4">Chief chips</td>
-            <td class="px-6 py-4">Ubo sipon lagnat</td>
-          </tr>
-          <tr class="border-b transition-all duration-200 ease-in-out odd:bg-white even:bg-pink-100 hover:bg-pink-300">
-            <td
-              scope="row"
-              class="whitespace-nowrap px-6 py-4 font-semibold text-black"
-            >
-              Juan Dela Cruz
-            </td>
-
-            <td class="px-6 py-4">February 29, 2024</td>
-            <td class="px-6 py-4">216</td>
-            <td class="px-6 py-4">Catholic</td>
-            <td class="px-6 py-4">Clark Pampanga</td>
-            <td class="px-6 py-4">March 01, 2024</td>
-            <td class="px-6 py-4">Chief chips</td>
-            <td class="px-6 py-4">Ubo sipon lagnat</td>
-          </tr>
-          <tr class="border-b transition-all duration-200 ease-in-out odd:bg-white even:bg-pink-100 hover:bg-pink-300">
-            <td
-              scope="row"
-              class="whitespace-nowrap px-6 py-4 font-semibold text-black"
-            >
-              Juan Dela Cruz
-            </td>
-
-            <td class="px-6 py-4">February 29, 2024</td>
-            <td class="px-6 py-4">216</td>
-            <td class="px-6 py-4">Catholic</td>
-            <td class="px-6 py-4">Clark Pampanga</td>
-            <td class="px-6 py-4">March 01, 2024</td>
-            <td class="px-6 py-4">Chief chips</td>
-            <td class="px-6 py-4">Ubo sipon lagnat</td>
-          </tr>
-          <tr class="border-b transition-all duration-200 ease-in-out odd:bg-white even:bg-pink-100 hover:bg-pink-300">
-            <td
-              scope="row"
-              class="whitespace-nowrap px-6 py-4 font-semibold text-black"
-            >
-              Juan Dela Cruz
-            </td>
-
-            <td class="px-6 py-4">February 29, 2024</td>
-            <td class="px-6 py-4">216</td>
-            <td class="px-6 py-4">Catholic</td>
-            <td class="px-6 py-4">Clark Pampanga</td>
-            <td class="px-6 py-4">March 01, 2024</td>
-            <td class="px-6 py-4">Chief chips</td>
-            <td class="px-6 py-4">Ubo sipon lagnat</td>
-          </tr>
-          <tr class="border-b transition-all duration-200 ease-in-out odd:bg-white even:bg-pink-100 hover:bg-pink-300">
-            <td
-              scope="row"
-              class="whitespace-nowrap px-6 py-4 font-semibold text-black"
-            >
-              Juan Dela Cruz
-            </td>
-
-            <td class="px-6 py-4">February 29, 2024</td>
-            <td class="px-6 py-4">216</td>
-            <td class="px-6 py-4">Catholic</td>
-            <td class="px-6 py-4">Clark Pampanga</td>
-            <td class="px-6 py-4">March 01, 2024</td>
-            <td class="px-6 py-4">Chief chips</td>
-            <td class="px-6 py-4">Ubo sipon lagnat</td>
-          </tr>
-          <tr class="border-b transition-all duration-200 ease-in-out odd:bg-white even:bg-pink-100 hover:bg-pink-300">
-            <td
-              scope="row"
-              class="whitespace-nowrap px-6 py-4 font-semibold text-black"
-            >
-              Juan Dela Cruz
-            </td>
-
-            <td class="px-6 py-4">February 29, 2024</td>
-            <td class="px-6 py-4">216</td>
-            <td class="px-6 py-4">Catholic</td>
-            <td class="px-6 py-4">Clark Pampanga</td>
-            <td class="px-6 py-4">March 01, 2024</td>
-            <td class="px-6 py-4">Chief chips</td>
-            <td class="px-6 py-4">Ubo sipon lagnat</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <>
+      {isLoading ? (
+        <div className="flex min-h-screen items-start justify-center pt-28">
+          <Loading />
+        </div>
+      ) : (
+        <div className="flex min-h-screen flex-col items-center justify-start gap-4 pt-44">
+          <div className="flex h-10 w-full justify-between">
+            <h1 className="text-2xl font-bold">Patient's Table</h1>
+            <button className="flex h-10 w-32 items-center justify-center rounded-lg bg-main py-2 font-semibold text-second transition-all duration-300 ease-in-out hover:border-2 hover:border-main hover:bg-second hover:text-black">
+              Add Patient
+            </button>
+          </div>
+          <Table patients={patients} />
+        </div>
+      )}
+    </>
   );
 };
 
