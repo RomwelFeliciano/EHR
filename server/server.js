@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const express = require('express');
 const path = require('path'); // Import path module
 const app = express();
+// Serve static files from the 'server/uploads' directory
+app.use('/server/uploads/', express.static('server/uploads'));
 
 // Middleware
 const cors = require('cors');
