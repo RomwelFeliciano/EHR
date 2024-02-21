@@ -3,23 +3,19 @@ import "react-toastify/dist/ReactToastify.css";
 import AppRoutes from "./AppRoutes";
 import Navbar from "./components/Navbar";
 import { useState } from "react";
+import { loadingContext } from "./contexts/LoadingContext";
 
 function App() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleLogin = () => {
-    setIsLogin(true);
-  };
-
-  const handeLogout = () => {
-    setIsLogin(false);
-  };
   return (
     <Router>
-      <Navbar isLogin={isLogin} handeLogout={handeLogout} />
-      <main className="bg-neutral-100 px-32">
-        <AppRoutes handleLogin={handleLogin} />
-      </main>
+      <loadingContext.Provider value={{ isLoading, setIsLoading }}>
+        <Navbar />
+        <main className="bg-neutral-100 px-32">
+          <AppRoutes />
+        </main>
+      </loadingContext.Provider>
     </Router>
   );
 }
