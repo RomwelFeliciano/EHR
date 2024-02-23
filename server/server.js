@@ -6,10 +6,9 @@ const mongoose = require('mongoose');
 
 // Initialize Express
 const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path'); // Import path module
 const app = express();
-// Serve static files from the 'server/uploads' directory
-app.use('/server/uploads/', express.static('server/uploads'));
 
 // Middleware
 const cors = require('cors');
@@ -28,6 +27,8 @@ const userRoute = require('./routes/userRoute');
 app.use('/api/user', userRoute);
 const patientRoute = require('./routes/patientRoute');
 app.use('/api/patients', patientRoute);
+// Serve static files from the 'server/uploads' directory
+app.use('/server/uploads/', express.static('server/uploads'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
