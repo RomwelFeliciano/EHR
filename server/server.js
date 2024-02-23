@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 
 // Initialize Express
 const express = require('express');
-const bodyParser = require('body-parser');
 const path = require('path'); // Import path module
 const app = express();
 
