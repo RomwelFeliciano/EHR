@@ -13,6 +13,15 @@ const Table = ({ patients }) => {
 
   console.log("Current Page: ", currentPage);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "2-digit",
+    }).format(date);
+  };
+
   return (
     <>
       <patientTableContext.Provider
@@ -60,13 +69,10 @@ const Table = ({ patients }) => {
           <tbody>
             {patientsData &&
               patientsData.map((patient) => {
-                // Format dateOfAdmission
-                let date = new Date(patient.dateOfAdmission);
-                let dateOfAdmissionFormat = new Intl.DateTimeFormat("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "2-digit",
-                }).format(date);
+                const dateOfBirthday = formatDate(patient.birthday);
+                const dateOfAdmissionFormat = formatDate(
+                  patient.dateOfAdmission,
+                );
 
                 return (
                   <tr
@@ -86,7 +92,7 @@ const Table = ({ patients }) => {
                     >
                       {patient.fullname}
                     </td>
-                    <td className="px-6 py-4">{patient.birthday}</td>
+                    <td className="px-6 py-4">{dateOfBirthday}</td>
                     <td className="px-6 py-4">{patient.hospitalNumber}</td>
                     <td className="px-6 py-4">{patient.address}</td>
                     <td className="px-6 py-4">{dateOfAdmissionFormat}</td>

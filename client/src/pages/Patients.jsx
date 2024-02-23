@@ -6,12 +6,28 @@ import Table from "../components/Table";
 import axios from "axios";
 
 const Patients = () => {
+  const { user } = useAuthContext();
   const { isLoading, setIsLoading } = useContext(loadingContext);
   // const [isLoading, setIsLoading] = useState(true);
 
   const [patients, setPatients] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const { user } = useAuthContext();
+  // Function to filter patients based on search query on each column
+  const filterPatients = (patients, query) => {
+    return patients.filter((patient) =>
+      Object.values(patient).some((value) =>
+        value.toString().toLowerCase().includes(query.toLowerCase()),
+      ),
+    );
+  };
+
+  // Filter only the name
+  // const filterPatients = (patients, query) => {
+  //   return patients.filter((patient) =>
+  //     patient.fullname.toLowerCase().includes(query.toLowerCase()),
+  //   );
+  // };
 
   // Handle Get All Data
   const getPatients = async () => {
@@ -43,6 +59,14 @@ const Patients = () => {
     }
   }, [user, getPatientsRef]);
 
+  // Handle search query change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Filter patients based on search query
+  const filteredPatients = filterPatients(patients, searchQuery);
+
   return (
     <>
       {isLoading ? (
@@ -53,11 +77,20 @@ const Patients = () => {
         <div className="flex min-h-screen flex-col items-center justify-start gap-4 pt-44">
           <div className="flex h-10 w-full justify-between">
             <h1 className="text-2xl font-bold">Patient's Table</h1>
-            <button className="flex h-10 w-32 items-center justify-center rounded-lg bg-main py-2 font-semibold text-second transition-all duration-300 ease-in-out hover:border-2 hover:border-main hover:bg-second hover:text-black">
-              Add Patient
-            </button>
+            <div className="flex items-center justify-center gap-4">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="h-10 w-48 rounded-lg border border-gray-300 bg-white px-3 outline-none transition-all duration-300 focus:border-main"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+              <button className="flex h-10 w-32 items-center justify-center rounded-lg bg-main py-2 font-semibold text-second transition-all duration-300 ease-in-out hover:border-2 hover:border-main hover:bg-second hover:text-black">
+                Add Patient
+              </button>
+            </div>
           </div>
-          <Table patients={patients} />
+          <Table patients={filteredPatients} />
         </div>
       )}
     </>
