@@ -19,14 +19,16 @@ const registerUser = async (req, res) => {
 		req.body;
 
 	// extracting the filename of the file and stores in a constant variable
-	const profilePicture = req.file;
+	const profilePictureReq = req.file;
 
 	try {
 		// Check if no file uploaded
-		if (!profilePicture) {
+		if (!profilePictureReq) {
 			// Return a json error message - return is needed so it wont crashed the server
 			return res.status(500).json({ error: 'No file uploaded.' });
 		}
+
+		const profilePicture = profilePictureReq.filename;
 
 		// Proceed here if no error
 		const user = await Users.register(
@@ -36,13 +38,19 @@ const registerUser = async (req, res) => {
 			contactNumber,
 			email,
 			password,
-			profilePicture.filename // .filename since we only want to store the filename
+			profilePicture // .filename since we only want to store the filename
 		);
 
 		const token = createToken(user._id);
 
 		// Uploaded Successfully
-		res.status(200).json({ firstname, lastname, profilePicture, token });
+		res.status(200).json({
+			firstname,
+			lastname,
+			email,
+			profilePicture,
+			token,
+		});
 	} catch (error) {
 		// Registration failed, delete the uploaded file if it exists
 		if (profilePicture) {
@@ -60,7 +68,7 @@ const loginUser = async (req, res) => {
 		const user = await Users.login(email, password);
 
 		// Destructure the user since inside of it is user
-		const { firstname, lastname } = user;
+		const { firstname, lastname, profilePicture } = user;
 
 		// Create a token
 		const token = createToken(user._id);
@@ -69,6 +77,7 @@ const loginUser = async (req, res) => {
 			firstname,
 			lastname,
 			email,
+			profilePicture,
 			token,
 		});
 	} catch (error) {
