@@ -6,6 +6,8 @@ import { useState } from "react";
 import { loadingContext } from "./contexts/LoadingContext";
 import { SearchProvider } from "./contexts/SearchPatientContext";
 import { PatientTableProvider } from "./contexts/PatientTableContext";
+import { ModalProvider } from "./contexts/ModalContext";
+import { ModalFormProvider } from "./contexts/ModalFormContext";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -13,14 +15,18 @@ function App() {
   return (
     <Router>
       <loadingContext.Provider value={{ isLoading, setIsLoading }}>
-        <PatientTableProvider>
-          <SearchProvider>
-            <Navbar />
-            <main className="bg-neutral-100 px-32">
-              <AppRoutes />
-            </main>
-          </SearchProvider>
-        </PatientTableProvider>
+        <ModalProvider>
+          <ModalFormProvider>
+            <PatientTableProvider>
+              <SearchProvider>
+                <Navbar />
+                <main className="bg-neutral-100 px-32">
+                  <AppRoutes />
+                </main>
+              </SearchProvider>
+            </PatientTableProvider>
+          </ModalFormProvider>
+        </ModalProvider>
       </loadingContext.Provider>
     </Router>
   );
