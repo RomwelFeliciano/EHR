@@ -1,14 +1,11 @@
 import { useContext } from "react";
-import { patientTableContext } from "../contexts/PatientTableContext";
+import { PatientTableContext } from "../contexts/PatientTableContext";
 
-const PaginationLinks = () => {
-  const { currentPage, setCurrentPage, numberOfPages, numbers } =
-    useContext(patientTableContext);
+const PaginationLinks = ({ numbers, numberOfPages }) => {
+  const { currentPage, setCurrentPage } = useContext(PatientTableContext);
 
   const startingPage = Math.max(1, currentPage - 2);
   const endingPage = Math.min(startingPage + 4, numberOfPages);
-
-  console.log(startingPage, endingPage);
 
   const handleChangePage = (page) => {
     setCurrentPage(page);
@@ -22,27 +19,25 @@ const PaginationLinks = () => {
     setCurrentPage(endingPage);
   };
 
-  // If the startingPage is greater than 1, render a dot
   const startingDots = startingPage > 1 && (
     <li key={1} className="cursor-pointer">
-      <span
+      <button
         className="flex h-10 items-center justify-center border border-third bg-white px-4 leading-tight text-black hover:bg-third hover:text-white"
         onClick={handleDotPrev}
       >
         ...
-      </span>
+      </button>
     </li>
   );
 
-  // If the endingPage is less than the last page, render a dot
   const endingDots = endingPage < numberOfPages && (
     <li key={numberOfPages} className="cursor-pointer">
-      <span
+      <button
         className="flex h-10 items-center justify-center border border-third bg-white px-4 leading-tight text-black hover:bg-third hover:text-white"
         onClick={handleDotNext}
       >
         ...
-      </span>
+      </button>
     </li>
   );
 
@@ -51,8 +46,7 @@ const PaginationLinks = () => {
       {startingDots}
       {numbers.slice(startingPage - 1, endingPage).map((num) => (
         <li key={num}>
-          <a
-            href="#"
+          <button
             className={`flex h-10 items-center justify-center border border-third px-4 leading-tight ${
               currentPage === num
                 ? "bg-main text-black hover:bg-third hover:text-white"
@@ -61,7 +55,7 @@ const PaginationLinks = () => {
             onClick={() => handleChangePage(num)}
           >
             {num}
-          </a>
+          </button>
         </li>
       ))}
       {endingDots}

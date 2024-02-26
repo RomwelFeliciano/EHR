@@ -4,6 +4,8 @@ import AppRoutes from "./AppRoutes";
 import Navbar from "./components/Navbar";
 import { useState } from "react";
 import { loadingContext } from "./contexts/LoadingContext";
+import { SearchProvider } from "./contexts/SearchPatientContext";
+import { PatientTableProvider } from "./contexts/PatientTableContext";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -11,10 +13,14 @@ function App() {
   return (
     <Router>
       <loadingContext.Provider value={{ isLoading, setIsLoading }}>
-        <Navbar />
-        <main className="bg-neutral-100 px-32">
-          <AppRoutes />
-        </main>
+        <PatientTableProvider>
+          <SearchProvider>
+            <Navbar />
+            <main className="bg-neutral-100 px-32">
+              <AppRoutes />
+            </main>
+          </SearchProvider>
+        </PatientTableProvider>
       </loadingContext.Provider>
     </Router>
   );

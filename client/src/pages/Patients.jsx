@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { loadingContext } from "../contexts/LoadingContext";
+import { useSearchContext } from "../hooks/useSearchContext";
+import { PatientTableContext } from "../contexts/PatientTableContext";
 import Loading from "../components/Loading";
 import Table from "../components/Table";
 import axios from "axios";
@@ -8,28 +10,11 @@ import axios from "axios";
 const Patients = () => {
   const { user } = useAuthContext();
   const { isLoading, setIsLoading } = useContext(loadingContext);
-  // const [isLoading, setIsLoading] = useState(true);
+  const { setCurrentPage } = useContext(PatientTableContext);
+  const { searchQuery, setSearchQuery } = useSearchContext();
 
   const [patients, setPatients] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
 
-  // Function to filter patients based on search query on each column
-  const filterPatients = (patients, query) => {
-    return patients.filter((patient) =>
-      Object.values(patient).some((value) =>
-        value.toString().toLowerCase().includes(query.toLowerCase()),
-      ),
-    );
-  };
-
-  // Filter only the name
-  // const filterPatients = (patients, query) => {
-  //   return patients.filter((patient) =>
-  //     patient.fullname.toLowerCase().includes(query.toLowerCase()),
-  //   );
-  // };
-
-  // Handle Get All Data
   const getPatients = async () => {
     setIsLoading(true);
     try {
@@ -39,18 +24,13 @@ const Patients = () => {
         },
       });
       setPatients(data);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 800);
+      setIsLoading(false);
     } catch (error) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 800);
+      setIsLoading(false);
       console.log(error);
     }
   };
 
-  // Re-render when there are notes
   const getPatientsRef = useRef(getPatients);
 
   useEffect(() => {
@@ -59,13 +39,27 @@ const Patients = () => {
     }
   }, [user, getPatientsRef]);
 
-  // Handle search query change
+  useEffect(() => {
+    const storedSearchQuery = localStorage.getItem("searchQuery");
+    if (storedSearchQuery) {
+      setSearchQuery(storedSearchQuery);
+    }
+  }, [setSearchQuery]);
+
+  useEffect(() => {
+    localStorage.setItem("searchQuery", searchQuery);
+  }, [searchQuery]);
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+    setCurrentPage(1);
   };
 
-  // Filter patients based on search query
-  const filteredPatients = filterPatients(patients, searchQuery);
+  const filteredPatients = patients.filter((patient) =>
+    Object.values(patient).some((value) =>
+      value.toString().toLowerCase().includes(searchQuery.toLowerCase()),
+    ),
+  );
 
   return (
     <>
@@ -81,7 +75,7 @@ const Patients = () => {
               <input
                 type="text"
                 placeholder="Search..."
-                className="h-10 w-48 rounded-lg border border-gray-300 bg-white px-3 outline-none transition-all duration-300 focus:border-main"
+                className="h-10 w-56 rounded-lg border border-gray-300 bg-white px-3 outline-none transition-all duration-300 focus:border-main"
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
