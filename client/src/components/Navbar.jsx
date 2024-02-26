@@ -84,6 +84,11 @@ const Navbar = () => {
           <h1 className="text-lg font-bold">
             Hello, {user.firstname} {user.lastname}
           </h1>
+          <img
+            src={`http://localhost:5000/server/uploads/profile-picture/${user.profilePicture}`}
+            alt="Picture"
+            className="h-10 w-10 rounded-full"
+          />
           <Link
             to="/"
             className="rounded-lg border-2 border-second px-2 py-1 text-second transition-all duration-300 ease-in-out hover:border-black hover:bg-third hover:text-white"
