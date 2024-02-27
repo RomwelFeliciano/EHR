@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import ModalContext from "../contexts/ModalContext";
+import { ModalContext } from "../contexts/ModalContext";
 
 // Returning SearchPatientContext but checking if it is inside the provider
 export const useModalContext = () => {
