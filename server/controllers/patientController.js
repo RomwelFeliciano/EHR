@@ -29,6 +29,19 @@ const addPatient = async (req, res) => {
 		return res.status(500).json({ error: 'No file uploaded.' });
 	}
 
+	if (
+		!fullname ||
+		!birthday ||
+		!hospitalNumber ||
+		!religion ||
+		!address ||
+		!dateOfAdmission ||
+		!complaint ||
+		!diagnosis
+	) {
+		// Return a json error message - return is needed so it wont crashed the server
+		return res.status(500).json({ error: 'All fields are required' });
+	}
 	try {
 		// extracting the filename of the file and stores in a constant variable
 
