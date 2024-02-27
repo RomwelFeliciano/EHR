@@ -9,8 +9,8 @@ const Table = ({ patients }) => {
   const { firstIndex, lastIndex, recordsPerPage, setTotalPatients } =
     useContext(PatientTableContext);
 
-  const { showModal, setShowModal } = useContext(ModalContext);
-  const { formData, setFormData } = useContext(ModalFormContext);
+  const { showModal, setShowModal, setModalType } = useContext(ModalContext);
+  const { setFormData } = useContext(ModalFormContext);
 
   const patientsData = useMemo(
     () => patients.slice(firstIndex, lastIndex),
@@ -41,6 +41,7 @@ const Table = ({ patients }) => {
   // Handle View Patient
   const viewPatient = async (patient) => {
     setShowModal(true);
+    setModalType({ viewModal: true });
     setFormData({
       fullname: patient.fullname,
       birthday: formatDate(patient.birthday),

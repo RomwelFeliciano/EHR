@@ -1,43 +1,53 @@
-import { useState, useEffect, useRef, useContext } from "react";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useEffect, useContext } from "react";
+
+import { ToastContainer } from "react-toastify";
+
 import { loadingContext } from "../contexts/LoadingContext";
-import { useSearchContext } from "../hooks/useSearchContext";
 import { PatientTableContext } from "../contexts/PatientTableContext";
+
+import { useAuthContext } from "../hooks/useAuthContext";
+import { usePatientContext } from "../hooks/usePatientContext";
+import { useSearchContext } from "../hooks/useSearchContext";
+import { useModalContext } from "../hooks/useModalContext";
+
 import Loading from "../components/Loading";
 import Table from "../components/Table";
-import axios from "axios";
 
 const Patients = () => {
+  // User Hook Authentication
   const { user } = useAuthContext();
-  const { isLoading, setIsLoading } = useContext(loadingContext);
-  const { setCurrentPage } = useContext(PatientTableContext);
+
+  // Patient Hook with Reducer
+  const { patients, dispatch } = usePatientContext();
+
+  // Search Hook
   const { searchQuery, setSearchQuery } = useSearchContext();
+  const { setShowModal, setModalType } = useModalContext();
 
-  const [patients, setPatients] = useState([]);
-
-  const getPatients = async () => {
-    setIsLoading(true);
-    try {
-      const { data } = await axios.get("http://localhost:5000/api/patients", {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-      setPatients(data);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
-    }
-  };
-
-  const getPatientsRef = useRef(getPatients);
+  // Use Context for Global State
+  const { isLoading } = useContext(loadingContext);
+  const { setCurrentPage } = useContext(PatientTableContext);
 
   useEffect(() => {
-    if (user) {
-      getPatientsRef.current();
-    }
-  }, [user, getPatientsRef]);
+    const fetchPatients = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/patients", {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+        const json = await response.json();
+
+        if (response.ok) {
+          dispatch({ type: "GET_PATIENTS", payload: json });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchPatients(); // Call fetchPatients function
+  }, [dispatch, user]); // Add isLoading as a dependency
 
   useEffect(() => {
     const storedSearchQuery = localStorage.getItem("searchQuery");
@@ -61,6 +71,11 @@ const Patients = () => {
     ),
   );
 
+  const updatePatient = () => {
+    setShowModal(true);
+    setModalType({ addModal: true });
+  };
+
   return (
     <>
       {isLoading ? (
@@ -69,6 +84,7 @@ const Patients = () => {
         </div>
       ) : (
         <div className="flex min-h-screen flex-col items-center justify-start gap-4 pt-44">
+          <ToastContainer position="top-center" autoClose={3000} />
           <div className="flex h-10 w-full justify-between">
             <h1 className="text-2xl font-bold">Patient's Table</h1>
             <div className="flex items-center justify-center gap-4">
@@ -79,7 +95,10 @@ const Patients = () => {
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
-              <button className="flex h-10 w-32 items-center justify-center rounded-lg bg-main py-2 font-semibold text-second transition-all duration-300 ease-in-out hover:border-2 hover:border-main hover:bg-second hover:text-black">
+              <button
+                className="flex h-10 w-32 items-center justify-center rounded-lg bg-main py-2 font-semibold text-second transition-all duration-300 ease-in-out hover:border-2 hover:border-main hover:bg-second hover:text-black"
+                onClick={updatePatient}
+              >
                 Add Patient
               </button>
             </div>
