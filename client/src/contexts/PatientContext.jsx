@@ -1,8 +1,9 @@
 import { createContext, useReducer } from "react";
 
-export const PatientContext = createContext();
+const PatientContext = createContext();
 
-export const patientsReducer = (state, action) => {
+const patientsReducer = (state, action) => {
+  // console.log(state, action);
   switch (action.type) {
     case "GET_PATIENTS":
       return {
@@ -14,7 +15,9 @@ export const patientsReducer = (state, action) => {
       };
     case "UPDATE_PATIENT":
       return {
-        patients: [action.payload, ...state.patients],
+        patients: state.patients.map((patient) =>
+          patient._id === action.payload._id ? action.payload : patient,
+        ),
       };
     case "DELETE_PATIENT":
       return {
@@ -25,7 +28,7 @@ export const patientsReducer = (state, action) => {
   }
 };
 
-export const PatientContextProvider = ({ children }) => {
+const PatientContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(patientsReducer, {
     patients: [],
   });
@@ -36,3 +39,5 @@ export const PatientContextProvider = ({ children }) => {
     </PatientContext.Provider>
   );
 };
+
+export { PatientContext, patientsReducer, PatientContextProvider };

@@ -10,7 +10,7 @@ const Table = ({ patients }) => {
     useContext(PatientTableContext);
 
   const { showModal, setShowModal, setModalType } = useContext(ModalContext);
-  const { setFormData } = useContext(ModalFormContext);
+  const { formData, setFormData } = useContext(ModalFormContext);
 
   const patientsData = useMemo(
     () => patients.slice(firstIndex, lastIndex),
@@ -54,8 +54,32 @@ const Table = ({ patients }) => {
       addedBy: patient.addedBy,
       patientPicture: patient.patientPicture,
     });
-    console.log(patient.patientPicture);
     // setNoteID(patient._id);
+  };
+
+  // Handle Get Single Note
+  const getSinglePatient = async (patient) => {
+    setFormData({
+      _id: patient._id,
+      fullname: patient.fullname,
+      birthday: formatDate(patient.birthday),
+      hospitalNumber: patient.hospitalNumber,
+      religion: patient.religion,
+      address: patient.address,
+      dateOfAdmission: formatDate(patient.dateOfAdmission),
+      complaint: patient.complaint,
+      diagnosis: patient.diagnosis,
+      addedBy: patient.addedBy,
+      patientPicture: patient.patientPicture,
+    });
+    setShowModal(true);
+    setModalType({ addModal: true, editModal: true });
+  };
+
+  const showDeleteModal = async (patient) => {
+    setFormData({ _id: patient._id, fullname: patient.fullname });
+    setShowModal(true);
+    setModalType({ deleteModal: true });
   };
 
   return (
@@ -131,12 +155,18 @@ const Table = ({ patients }) => {
                     </button>
                   </td>
                   <td className="px-2 py-4">
-                    <button className="w-14 rounded-lg bg-green-400 py-2 hover:bg-green-600">
+                    <button
+                      className="w-14 rounded-lg bg-green-400 py-2 hover:bg-green-600"
+                      onClick={() => getSinglePatient(patient)}
+                    >
                       Edit
                     </button>
                   </td>
                   <td className="py-4 pl-2 pr-4">
-                    <button className="w-14 rounded-lg bg-red-400 py-2 hover:bg-red-600">
+                    <button
+                      className="w-14 rounded-lg bg-red-400 py-2 hover:bg-red-600"
+                      onClick={() => showDeleteModal(patient)}
+                    >
                       Delete
                     </button>
                   </td>

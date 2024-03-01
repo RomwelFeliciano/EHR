@@ -3,6 +3,7 @@ import { ModalContext } from "../contexts/ModalContext";
 import { ModalFormContext } from "../contexts/ModalFormContext";
 import ViewModal from "./ViewModal";
 import AddModal from "./AddModal";
+import DeleteModal from "./DeleteModal";
 
 const Modal = () => {
   const { setShowModal, modalType, setModalType } = useContext(ModalContext);
@@ -52,8 +53,7 @@ const Modal = () => {
           {/* Your modal content goes here */}
           {modalType.addModal && <AddModal />}
           {modalType.viewModal && <ViewModal />}
-          {modalType.updateModal && <ViewModal />}
-          {modalType.deleteModal && <ViewModal />}
+          {modalType.deleteModal && <DeleteModal />}
         </div>
       </div>
     </div>

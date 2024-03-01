@@ -4,6 +4,7 @@ export const ModalFormContext = createContext();
 
 export const ModalFormProvider = ({ children }) => {
   const [formData, setFormData] = useState({
+    _id: "",
     fullname: "",
     birthday: "",
     hospitalNumber: "",
